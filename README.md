@@ -1,5 +1,5 @@
 # Projeto-Banco-de-Dados-Azure
-Repositório do Trabalho de Banco de Dados da Matéria Tópicos Avançados em Programação
+Repositório do Trabalho de Banco de Dados da Matéria Tópicos Avançados em Programação.
 
 ### Integrantes da Equipe
 
