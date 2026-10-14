@@ -1,9 +1,30 @@
 name: CI
-on: [push]
+
+on:
+  push:
+  pull_request:
+
 jobs:
   validar:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: python3 --version
-      - run: python3 -m py_compile function_app.py
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar ferramentas de qualidade
+        run: pip install -r requirements-dev.txt
+
+      - name: Verificar sintaxe
+        run: python -m py_compile function_app.py
+
+      - name: Linting (flake8)
+        run: flake8 .
+
+      - name: Formatação (black)
+        run: black --check --diff .
+
+      - name: Ordenação de imports (isort)
+        run: isort --check-only --diff .
