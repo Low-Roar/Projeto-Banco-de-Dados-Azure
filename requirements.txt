@@ -3,4 +3,6 @@
 # azure-monitor-opentelemetry
 
 azure-functions
+requests
 pyodbc
+azure-storage-file-datalake
