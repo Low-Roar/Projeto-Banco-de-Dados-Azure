@@ -79,10 +79,9 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
                 writer.writerows(rows)
 
                 agora = datetime.now(timezone.utc)
-                file_path = (
-                    f"fila/{agora:%Y/%m/%d}/"
-                    f"fila_{agora:%Y%m%d_%H%M%S}.csv"
-                )
+                pasta = f"{agora:%Y/%m/%d}"
+                arquivo = f"fila_{agora:%Y%m%d_%H%M%S}.csv"
+                file_path = f"fila/{pasta}/{arquivo}"
 
                 datalake = DataLakeServiceClient.from_connection_string(datalake_cs)
                 file_client = datalake.get_file_system_client("bronze").get_file_client(
@@ -94,7 +93,7 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
 
                 logging.info(f"CSV salvo em bronze/{file_path}")
             except Exception as e:
-                logging.warning(f"Não foi possível salvar fila no Data Lake: {e}")
+                logging.warning(f"Falha ao salvar no Data Lake: {e}")
         else:
             logging.info("Sem DATALAKE_CONNECTION_STRING, etapa do Data Lake ignorada")
 
@@ -201,10 +200,9 @@ def extract_categoria(myTimer: func.TimerRequest) -> None:
                 writer.writerows(rows)
 
                 agora = datetime.now(timezone.utc)
-                file_path = (
-                    f"categoria/{agora:%Y/%m/%d}/"
-                    f"categoria_{agora:%Y%m%d_%H%M%S}.csv"
-                )
+                pasta = f"{agora:%Y/%m/%d}"
+                arquivo = f"categoria_{agora:%Y%m%d_%H%M%S}.csv"
+                file_path = f"categoria/{pasta}/{arquivo}"
 
                 datalake = DataLakeServiceClient.from_connection_string(datalake_cs)
                 file_client = datalake.get_file_system_client("bronze").get_file_client(
@@ -216,7 +214,7 @@ def extract_categoria(myTimer: func.TimerRequest) -> None:
 
                 logging.info(f"CSV salvo em bronze/{file_path}")
             except Exception as e:
-                logging.warning(f"Não foi possível salvar categoria no Data Lake: {e}")
+                logging.warning(f"Falha ao salvar no Data Lake: {e}")
         else:
             logging.info("Sem DATALAKE_CONNECTION_STRING, etapa do Data Lake ignorada")
 
@@ -323,10 +321,9 @@ def extract_cliente_organizacao(myTimer: func.TimerRequest) -> None:
                 writer.writerows(rows)
 
                 agora = datetime.now(timezone.utc)
-                file_path = (
-                    f"cliente_organizacao/{agora:%Y/%m/%d}/"
-                    f"cliente_organizacao_{agora:%Y%m%d_%H%M%S}.csv"
-                )
+                pasta = f"{agora:%Y/%m/%d}"
+                arquivo = f"cliente_organizacao_{agora:%Y%m%d_%H%M%S}.csv"
+                file_path = f"cliente_organizacao/{pasta}/{arquivo}"
 
                 datalake = DataLakeServiceClient.from_connection_string(datalake_cs)
                 file_client = datalake.get_file_system_client("bronze").get_file_client(
@@ -338,7 +335,7 @@ def extract_cliente_organizacao(myTimer: func.TimerRequest) -> None:
 
                 logging.info(f"CSV salvo em bronze/{file_path}")
             except Exception as e:
-                logging.warning(f"Não foi possível salvar cliente_organizacao no Data Lake: {e}")
+                logging.warning(f"Falha ao salvar no Data Lake: {e}")
         else:
             logging.info("Sem DATALAKE_CONNECTION_STRING, etapa do Data Lake ignorada")
 
@@ -445,10 +442,9 @@ def extract_sla(myTimer: func.TimerRequest) -> None:
                 writer.writerows(rows)
 
                 agora = datetime.now(timezone.utc)
-                file_path = (
-                    f"sla/{agora:%Y/%m/%d}/"
-                    f"sla_{agora:%Y%m%d_%H%M%S}.csv"
-                )
+                pasta = f"{agora:%Y/%m/%d}"
+                arquivo = f"sla_{agora:%Y%m%d_%H%M%S}.csv"
+                file_path = f"sla/{pasta}/{arquivo}"
 
                 datalake = DataLakeServiceClient.from_connection_string(datalake_cs)
                 file_client = datalake.get_file_system_client("bronze").get_file_client(
@@ -460,7 +456,7 @@ def extract_sla(myTimer: func.TimerRequest) -> None:
 
                 logging.info(f"CSV salvo em bronze/{file_path}")
             except Exception as e:
-                logging.warning(f"Não foi possível salvar sla no Data Lake: {e}")
+                logging.warning(f"Falha ao salvar no Data Lake: {e}")
         else:
             logging.info("Sem DATALAKE_CONNECTION_STRING, etapa do Data Lake ignorada")
 
@@ -567,10 +563,9 @@ def extract_analista(myTimer: func.TimerRequest) -> None:
                 writer.writerows(rows)
 
                 agora = datetime.now(timezone.utc)
-                file_path = (
-                    f"analista/{agora:%Y/%m/%d}/"
-                    f"analista_{agora:%Y%m%d_%H%M%S}.csv"
-                )
+                pasta = f"{agora:%Y/%m/%d}"
+                arquivo = f"analista_{agora:%Y%m%d_%H%M%S}.csv"
+                file_path = f"analista/{pasta}/{arquivo}"
 
                 datalake = DataLakeServiceClient.from_connection_string(datalake_cs)
                 file_client = datalake.get_file_system_client("bronze").get_file_client(
@@ -582,7 +577,7 @@ def extract_analista(myTimer: func.TimerRequest) -> None:
 
                 logging.info(f"CSV salvo em bronze/{file_path}")
             except Exception as e:
-                logging.warning(f"Não foi possível salvar analista no Data Lake: {e}")
+                logging.warning(f"Falha ao salvar no Data Lake: {e}")
         else:
             logging.info("Sem DATALAKE_CONNECTION_STRING, etapa do Data Lake ignorada")
 
@@ -689,10 +684,9 @@ def extract_solicitante(myTimer: func.TimerRequest) -> None:
                 writer.writerows(rows)
 
                 agora = datetime.now(timezone.utc)
-                file_path = (
-                    f"solicitante/{agora:%Y/%m/%d}/"
-                    f"solicitante_{agora:%Y%m%d_%H%M%S}.csv"
-                )
+                pasta = f"{agora:%Y/%m/%d}"
+                arquivo = f"solicitante_{agora:%Y%m%d_%H%M%S}.csv"
+                file_path = f"solicitante/{pasta}/{arquivo}"
 
                 datalake = DataLakeServiceClient.from_connection_string(datalake_cs)
                 file_client = datalake.get_file_system_client("bronze").get_file_client(
@@ -704,7 +698,7 @@ def extract_solicitante(myTimer: func.TimerRequest) -> None:
 
                 logging.info(f"CSV salvo em bronze/{file_path}")
             except Exception as e:
-                logging.warning(f"Não foi possível salvar solicitante no Data Lake: {e}")
+                logging.warning(f"Falha ao salvar no Data Lake: {e}")
         else:
             logging.info("Sem DATALAKE_CONNECTION_STRING, etapa do Data Lake ignorada")
 
@@ -811,10 +805,9 @@ def extract_chamado(myTimer: func.TimerRequest) -> None:
                 writer.writerows(rows)
 
                 agora = datetime.now(timezone.utc)
-                file_path = (
-                    f"chamado/{agora:%Y/%m/%d}/"
-                    f"chamado_{agora:%Y%m%d_%H%M%S}.csv"
-                )
+                pasta = f"{agora:%Y/%m/%d}"
+                arquivo = f"chamado_{agora:%Y%m%d_%H%M%S}.csv"
+                file_path = f"chamado/{pasta}/{arquivo}"
 
                 datalake = DataLakeServiceClient.from_connection_string(datalake_cs)
                 file_client = datalake.get_file_system_client("bronze").get_file_client(
@@ -826,7 +819,7 @@ def extract_chamado(myTimer: func.TimerRequest) -> None:
 
                 logging.info(f"CSV salvo em bronze/{file_path}")
             except Exception as e:
-                logging.warning(f"Não foi possível salvar chamado no Data Lake: {e}")
+                logging.warning(f"Falha ao salvar no Data Lake: {e}")
         else:
             logging.info("Sem DATALAKE_CONNECTION_STRING, etapa do Data Lake ignorada")
 
@@ -933,10 +926,9 @@ def extract_chamado_sla(myTimer: func.TimerRequest) -> None:
                 writer.writerows(rows)
 
                 agora = datetime.now(timezone.utc)
-                file_path = (
-                    f"chamado_sla/{agora:%Y/%m/%d}/"
-                    f"chamado_sla_{agora:%Y%m%d_%H%M%S}.csv"
-                )
+                pasta = f"{agora:%Y/%m/%d}"
+                arquivo = f"chamado_sla_{agora:%Y%m%d_%H%M%S}.csv"
+                file_path = f"chamado_sla/{pasta}/{arquivo}"
 
                 datalake = DataLakeServiceClient.from_connection_string(datalake_cs)
                 file_client = datalake.get_file_system_client("bronze").get_file_client(
@@ -948,7 +940,7 @@ def extract_chamado_sla(myTimer: func.TimerRequest) -> None:
 
                 logging.info(f"CSV salvo em bronze/{file_path}")
             except Exception as e:
-                logging.warning(f"Não foi possível salvar chamado_sla no Data Lake: {e}")
+                logging.warning(f"Falha ao salvar no Data Lake: {e}")
         else:
             logging.info("Sem DATALAKE_CONNECTION_STRING, etapa do Data Lake ignorada")
 
@@ -1055,10 +1047,9 @@ def extract_chamado_status_historico(myTimer: func.TimerRequest) -> None:
                 writer.writerows(rows)
 
                 agora = datetime.now(timezone.utc)
-                file_path = (
-                    f"chamado_status_historico/{agora:%Y/%m/%d}/"
-                    f"chamado_status_historico_{agora:%Y%m%d_%H%M%S}.csv"
-                )
+                pasta = f"{agora:%Y/%m/%d}"
+                arquivo = f"chamado_status_historico_{agora:%Y%m%d_%H%M%S}.csv"
+                file_path = f"chamado_status_historico/{pasta}/{arquivo}"
 
                 datalake = DataLakeServiceClient.from_connection_string(datalake_cs)
                 file_client = datalake.get_file_system_client("bronze").get_file_client(
@@ -1070,7 +1061,7 @@ def extract_chamado_status_historico(myTimer: func.TimerRequest) -> None:
 
                 logging.info(f"CSV salvo em bronze/{file_path}")
             except Exception as e:
-                logging.warning(f"Não foi possível salvar chamado_status_historico no Data Lake: {e}")
+                logging.warning(f"Falha ao salvar no Data Lake: {e}")
         else:
             logging.info("Sem DATALAKE_CONNECTION_STRING, etapa do Data Lake ignorada")
 
@@ -1177,10 +1168,9 @@ def extract_csat_avaliacao(myTimer: func.TimerRequest) -> None:
                 writer.writerows(rows)
 
                 agora = datetime.now(timezone.utc)
-                file_path = (
-                    f"csat_avaliacao/{agora:%Y/%m/%d}/"
-                    f"csat_avaliacao_{agora:%Y%m%d_%H%M%S}.csv"
-                )
+                pasta = f"{agora:%Y/%m/%d}"
+                arquivo = f"csat_avaliacao_{agora:%Y%m%d_%H%M%S}.csv"
+                file_path = f"csat_avaliacao/{pasta}/{arquivo}"
 
                 datalake = DataLakeServiceClient.from_connection_string(datalake_cs)
                 file_client = datalake.get_file_system_client("bronze").get_file_client(
@@ -1192,7 +1182,7 @@ def extract_csat_avaliacao(myTimer: func.TimerRequest) -> None:
 
                 logging.info(f"CSV salvo em bronze/{file_path}")
             except Exception as e:
-                logging.warning(f"Não foi possível salvar csat_avaliacao no Data Lake: {e}")
+                logging.warning(f"Falha ao salvar no Data Lake: {e}")
         else:
             logging.info("Sem DATALAKE_CONNECTION_STRING, etapa do Data Lake ignorada")
 
