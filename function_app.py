@@ -15,7 +15,6 @@ app = func.FunctionApp()
 # Horário em UTC (03:00 UTC = meia-noite em Brasília).
 
 
-
 @app.timer_trigger(
     schedule="0 0 3 * * *", arg_name="myTimer", run_on_startup=False, use_monitor=False
 )
@@ -254,7 +253,6 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
         )
 
         raise
-
 
 
 @app.timer_trigger(
