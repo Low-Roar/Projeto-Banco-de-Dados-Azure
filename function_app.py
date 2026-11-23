@@ -15,6 +15,7 @@ app = func.FunctionApp()
 # Horário em UTC (03:00 UTC = meia-noite em Brasília).
 
 
+
 @app.timer_trigger(
     schedule="0 0 3 * * *", arg_name="myTimer", run_on_startup=False, use_monitor=False
 )
@@ -149,14 +150,11 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
                     buffer.getvalue().encode("utf-8"), overwrite=True
                 )
 
-                logging.info(
-                    "[DATALAKE] CSV salvo com sucesso em bronze/%s", file_path
-                )
+                logging.info("[DATALAKE] CSV salvo com sucesso em bronze/%s", file_path)
 
             except Exception:
                 logging.exception(
-                    "[DATALAKE] Falha ao salvar CSV. "
-                    "A carga no banco continuara."
+                    "[DATALAKE] Falha ao salvar CSV. " "A carga no banco continuara."
                 )
 
         else:
@@ -172,9 +170,7 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
 
         placeholders = ", ".join("?" for _ in columns)
 
-        set_list = ", ".join(
-            f"t.[{c}] = s.[{c}]" for c in columns if c != pk
-        )
+        set_list = ", ".join(f"t.[{c}] = s.[{c}]" for c in columns if c != pk)
 
         ins_list = ", ".join(f"s.[{c}]" for c in columns)
 
@@ -217,9 +213,7 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
 
                 dest_cursor.executemany(merge_sql, [tuple(r) for r in rows])
 
-                logging.info(
-                    "[CARGA] MERGE executado. Desativando IDENTITY_INSERT."
-                )
+                logging.info("[CARGA] MERGE executado. Desativando IDENTITY_INSERT.")
 
                 dest_cursor.execute(f"SET IDENTITY_INSERT {tabela_dest} OFF")
 
@@ -239,8 +233,7 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
 
         except Exception:
             logging.exception(
-                "[CARGA] Erro durante a gravacao no destino. "
-                "Executando rollback."
+                "[CARGA] Erro durante a gravacao no destino. " "Executando rollback."
             )
 
             dest_conn.rollback()
@@ -261,6 +254,7 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
         )
 
         raise
+
 
 
 @app.timer_trigger(
