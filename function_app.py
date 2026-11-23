@@ -16,10 +16,7 @@ app = func.FunctionApp()
 
 
 @app.timer_trigger(
-    schedule="0 0 3 * * *",
-    arg_name="myTimer",
-    run_on_startup=False,
-    use_monitor=False
+    schedule="0 0 3 * * *", arg_name="myTimer", run_on_startup=False, use_monitor=False
 )
 def extract_fila(myTimer: func.TimerRequest) -> None:
     logging.info("========== INICIO extract_fila ==========")
@@ -56,15 +53,10 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
             "DEST_PASSWORD": dest_pass,
         }
 
-        faltando = [
-            nome for nome, valor in variaveis.items()
-            if not valor
-        ]
+        faltando = [nome for nome, valor in variaveis.items() if not valor]
 
         if faltando:
-            raise ValueError(
-                f"Variaveis de ambiente ausentes: {', '.join(faltando)}"
-            )
+            raise ValueError(f"Variaveis de ambiente ausentes: {', '.join(faltando)}")
 
         logging.info("[CONFIGURACAO] Variaveis obrigatorias encontradas")
 
@@ -95,10 +87,7 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
         # 3) Extracao do banco de origem
         etapa = "conexao com banco de origem"
 
-        logging.info(
-            "[EXTRACAO] Conectando ao banco de origem: %s",
-            sql_database
-        )
+        logging.info("[EXTRACAO] Conectando ao banco de origem: %s", sql_database)
 
         with pyodbc.connect(conn_str) as conn:
             logging.info("[EXTRACAO] Conexao com a origem estabelecida")
@@ -107,9 +96,7 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
 
             etapa = "execucao do SELECT na origem"
 
-            logging.info(
-                "[EXTRACAO] Executando SELECT em itsm.fila"
-            )
+            logging.info("[EXTRACAO] Executando SELECT em itsm.fila")
 
             cursor.execute("SELECT * FROM itsm.fila")
 
@@ -120,15 +107,9 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
             rows = cursor.fetchall()
             columns = [col[0] for col in cursor.description]
 
-            logging.info(
-                "[EXTRACAO] Leitura concluida. Registros: %d",
-                len(rows)
-            )
+            logging.info("[EXTRACAO] Leitura concluida. Registros: %d", len(rows))
 
-            logging.info(
-                "[EXTRACAO] Colunas retornadas: %s",
-                ", ".join(columns)
-            )
+            logging.info("[EXTRACAO] Colunas retornadas: %s", ", ".join(columns))
 
         logging.info("[EXTRACAO] Etapa de extracao finalizada")
 
@@ -154,33 +135,22 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
                 arquivo = f"fila_{agora:%Y%m%d_%H%M%S}.csv"
                 file_path = f"fila/{pasta}/{arquivo}"
 
-                logging.info(
-                    "[DATALAKE] Conectando ao container bronze"
-                )
+                logging.info("[DATALAKE] Conectando ao container bronze")
 
-                datalake = DataLakeServiceClient.from_connection_string(
-                    datalake_cs
-                )
+                datalake = DataLakeServiceClient.from_connection_string(datalake_cs)
 
-                file_client = (
-                    datalake
-                    .get_file_system_client("bronze")
-                    .get_file_client(file_path)
-                )
-
-                logging.info(
-                    "[DATALAKE] Enviando arquivo: %s",
+                file_client = datalake.get_file_system_client("bronze").get_file_client(
                     file_path
                 )
+
+                logging.info("[DATALAKE] Enviando arquivo: %s", file_path)
 
                 file_client.upload_data(
-                    buffer.getvalue().encode("utf-8"),
-                    overwrite=True
+                    buffer.getvalue().encode("utf-8"), overwrite=True
                 )
 
                 logging.info(
-                    "[DATALAKE] CSV salvo com sucesso em bronze/%s",
-                    file_path
+                    "[DATALAKE] CSV salvo com sucesso em bronze/%s", file_path
                 )
 
             except Exception:
@@ -190,10 +160,7 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
                 )
 
         else:
-            logging.info(
-                "[DATALAKE] Connection string ausente. "
-                "Etapa ignorada."
-            )
+            logging.info("[DATALAKE] Connection string ausente. Etapa ignorada.")
 
         # 5) Preparacao do MERGE no banco de destino
         etapa = "preparacao do MERGE no destino"
@@ -201,50 +168,32 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
         pk = "id_fila"
         tabela_dest = f"{dest_schema}.fila"
 
-        col_list = ", ".join(
-            f"[{c}]" for c in columns
-        )
+        col_list = ", ".join(f"[{c}]" for c in columns)
 
-        placeholders = ", ".join(
-            "?" for _ in columns
-        )
+        placeholders = ", ".join("?" for _ in columns)
 
         set_list = ", ".join(
-            f"t.[{c}] = s.[{c}]"
-            for c in columns
-            if c != pk
+            f"t.[{c}] = s.[{c}]" for c in columns if c != pk
         )
 
-        ins_list = ", ".join(
-            f"s.[{c}]" for c in columns
-        )
+        ins_list = ", ".join(f"s.[{c}]" for c in columns)
 
         merge_sql = (
             f"MERGE {tabela_dest} AS t "
             f"USING (VALUES ({placeholders})) AS s ({col_list}) "
             f"ON t.[{pk}] = s.[{pk}] "
             f"WHEN MATCHED THEN UPDATE SET {set_list} "
-            f"WHEN NOT MATCHED THEN "
-            f"INSERT ({col_list}) VALUES ({ins_list});"
+            f"WHEN NOT MATCHED THEN INSERT ({col_list}) VALUES ({ins_list});"
         )
 
-        logging.info(
-            "[CARGA] MERGE preparado para %s",
-            tabela_dest
-        )
+        logging.info("[CARGA] MERGE preparado para %s", tabela_dest)
 
         # 6) Conexao com o destino
         etapa = "conexao com banco de destino"
 
-        logging.info(
-            "[CARGA] Conectando ao banco de destino: %s",
-            dest_database
-        )
+        logging.info("[CARGA] Conectando ao banco de destino: %s", dest_database)
 
-        dest_conn = pyodbc.connect(
-            dest_conn_str,
-            autocommit=False
-        )
+        dest_conn = pyodbc.connect(dest_conn_str, autocommit=False)
 
         logging.info("[CARGA] Conexao com o destino estabelecida")
 
@@ -255,43 +204,28 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
                 # Permite inserir os IDs originais da origem
                 etapa = "IDENTITY_INSERT no destino"
 
-                logging.info(
-                    "[CARGA] Ativando IDENTITY_INSERT em %s",
-                    tabela_dest
-                )
+                logging.info("[CARGA] Ativando IDENTITY_INSERT em %s", tabela_dest)
 
-                dest_cursor.execute(
-                    f"SET IDENTITY_INSERT {tabela_dest} ON"
-                )
+                dest_cursor.execute(f"SET IDENTITY_INSERT {tabela_dest} ON")
 
                 # 7) Executa o MERGE
                 etapa = "execucao do MERGE no destino"
 
-                logging.info(
-                    "[CARGA] Iniciando MERGE de %d registros",
-                    len(rows)
-                )
+                logging.info("[CARGA] Iniciando MERGE de %d registros", len(rows))
 
                 dest_cursor.fast_executemany = False
 
-                dest_cursor.executemany(
-                    merge_sql,
-                    [tuple(r) for r in rows]
-                )
+                dest_cursor.executemany(merge_sql, [tuple(r) for r in rows])
 
                 logging.info(
-                    "[CARGA] MERGE executado. "
-                    "Desativando IDENTITY_INSERT."
+                    "[CARGA] MERGE executado. Desativando IDENTITY_INSERT."
                 )
 
-                dest_cursor.execute(
-                    f"SET IDENTITY_INSERT {tabela_dest} OFF"
-                )
+                dest_cursor.execute(f"SET IDENTITY_INSERT {tabela_dest} OFF")
 
             else:
                 logging.info(
-                    "[CARGA] Nenhum registro recebido da origem. "
-                    "Nada para gravar."
+                    "[CARGA] Nenhum registro recebido da origem. Nada para gravar."
                 )
 
             # 8) Confirma a transacao
@@ -301,9 +235,7 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
 
             dest_conn.commit()
 
-            logging.info(
-                "[CARGA] Transacao confirmada com sucesso"
-            )
+            logging.info("[CARGA] Transacao confirmada com sucesso")
 
         except Exception:
             logging.exception(
@@ -317,19 +249,15 @@ def extract_fila(myTimer: func.TimerRequest) -> None:
         finally:
             dest_conn.close()
 
-            logging.info(
-                "[CARGA] Conexao com o destino encerrada"
-            )
+            logging.info("[CARGA] Conexao com o destino encerrada")
 
-        logging.info(
-            "========== FIM extract_fila: SUCESSO =========="
-        )
+        logging.info("========== FIM extract_fila: SUCESSO ==========")
 
     except Exception:
         logging.exception(
             "========== FALHA extract_fila ==========\n"
             "Etapa em que ocorreu o erro: %s",
-            etapa
+            etapa,
         )
 
         raise
