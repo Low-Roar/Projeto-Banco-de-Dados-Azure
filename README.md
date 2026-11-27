@@ -9,3 +9,7 @@ Repositório do Trabalho de Banco de Dados da Matéria Tópicos Avançados em Pr
 
 ## Desenho da Arquitetura
 <img width="10040" height="5846" alt="Desenho da Arquitetura" src="https://github.com/user-attachments/assets/9cde80c9-5302-41b5-a5da-ba133fad914a" />
+
+## Dashboard
+<img width="1790" height="1008" alt="Dashboard" src="https://github.com/user-attachments/assets/2e5aa5c2-cfcd-45a4-bcee-9c232bb4a516" />
+
